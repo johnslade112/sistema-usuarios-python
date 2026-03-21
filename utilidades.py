@@ -3,7 +3,7 @@
 
 
 
-
+# função de entrada de dados
 def obter_dado_usuario():
     nome = input("Nome: ").strip()
     idade = input("Idade: ")

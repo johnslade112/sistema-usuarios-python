@@ -1,6 +1,8 @@
 from utilidades import obter_dado_usuario, validar_nome, validar_idade, validar_email
-from database import salvar_dados
+from database import salvar_dados, carregar_dados
 
+
+# função menu
 def menu():
     print("""
                 Sistema de Usuários
@@ -12,19 +14,10 @@ def menu():
                 5 - Sair
         \n
         """)
-    
-# função de perguntar se quer continuar
-def perguntar_continuar():
-    while True:
-        resposta = input("Quer adicionar mais usuário [S/N]: ").upper().strip()
-        print("")
-        if resposta in ("S","N"):
-            return resposta
-        print("Entrado inválida, deve ser [S/N].\n")
 
 
 # função de função        
-def num_opcao():
+def numero_opcao_menu():
     while True:
         try:
             opcao = int(input("Numero da Opção: "))
@@ -35,16 +28,17 @@ def num_opcao():
         except ValueError as erro:
             print("Digite apenas numeros.\n")
 
-    
+# função de perguntar se quer continuar
+def perguntar_continuar():
+    while True:
+        resposta = input("Quer adicionar mais usuário [S/N]: ").upper().strip()
+        print("")
+        if resposta in ("S","N"):
+            return resposta
+        print("Entrado inválida, deve ser [S/N].\n")
 
-# gerando ID
-def gerar_id(lista_usuarios):
-    if not lista_usuarios:
-        return 1
-    # isso soma faz a soma com o maior id da lista
-    return max(u["id"] for u in lista_usuarios) + 1
 
-# validando usuario
+# função de validar usuários 
 def validar_usuario(nome, idade, email, lista_usuarios):
     valido, erro = validar_nome(nome)
     # se não for True
@@ -59,9 +53,18 @@ def validar_usuario(nome, idade, email, lista_usuarios):
     if not valido:
         return False, erro
     
-    return True, (nome, int(idade), email)
+    return True, "", (nome, int(idade), email)
 
-# montando usuario
+
+
+# função de gerar ID
+def gerar_id(lista_usuarios):
+    if not lista_usuarios:
+        return 1
+    # isso soma faz a soma com o maior id da lista
+    return max(u["id"] for u in lista_usuarios) + 1
+
+# função de gerar id
 def montar_usuario(id, nome, idade, email):
     return {
         "id": id,
@@ -70,28 +73,56 @@ def montar_usuario(id, nome, idade, email):
         "email": email
     }
 
-# salvando o usuario
-def salvar_usuario(usuario, lista_usuario):
-    lista_usuario.append(usuario)
-    salvar_dados(lista_usuario)
+# função de salvar usuários
+def salvar_usuario(usuario, lista_usuarios):
+    lista_usuarios.append(usuario)
+    salvar_dados(lista_usuarios)
 
 
 # função de usuario
 def criar_usuario(lista_usuarios):
     # entrado de dados
     nome, idade, email = obter_dado_usuario()
-
-    # validando usuário
-    valido, dados = validar_usuario(nome, idade, email, lista_usuarios)
+    
+    # validando os dados 
+    valido, resposta, dados = validar_usuario(nome, idade, email, lista_usuarios)
     if not valido:
-        return False, dados
+        return False, resposta
     
     nome, idade, email = dados
+    # gerando_id 
     novo_id = gerar_id(lista_usuarios)
+    # montando 
     usuario = montar_usuario(novo_id, nome, idade, email)
-     # salvando os dados 
+
+    #salvando
     salvar_usuario(usuario, lista_usuarios)
-    return True, "Usuário cadastrado com sucesso\n!"
+    return True, "Usuário cadastrado com sucesso!\n"
+
+    
+
+    
+# função de listar os usuários
+def listar_usuarios(lista_usuarios):
+    return lista_usuarios
+
+
+# função de buscar usuário pelo ID
+def buscar_usuario(lista_usuarios, numero_id):
+    for usuario in lista_usuarios:
+        if usuario["id"] == numero_id:
+            return True, usuario
+    return False, "Usuário não encontrado.\n"
+
+
+# função de remover usuário
+def remover_usuario(lista_usuarios, id_remover):
+    for usuario in lista_usuarios:
+        if usuario["id"] == id_remover:
+            lista_usuarios.remove(usuario)
+            salvar_dados(lista_usuarios)
+            return True, "Usuário removido com sucesso!\n"
+    return False, "Usuário não encontrado.\n"
 
 
 

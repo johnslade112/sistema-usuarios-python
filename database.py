@@ -15,5 +15,5 @@ def carregar_dados():
 
 def salvar_dados(lista_usuarios):
     # abre o arq, ler e sobrescreve
-    with open("usuarios.py", "w") as f:
+    with open("usuarios.json", "w") as f:
         json.dump(lista_usuarios, f, indent=4)
