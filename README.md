@@ -26,9 +26,9 @@ Projeto desenvolvido em Python com foco em prática de conceitos de backend, org
 ## 📂 Estrutura do projeto
 
 * `main.py` → Interface com o usuário
-* `servico_usuario.py` → Lógica de negócio
+* `services.py` → Lógica de negócio
 * `database.py` → Persistência de dados (JSON)
-* `utilidades.py` → Funções auxiliares e validações
+* `utils.py` → Funções auxiliares e validações
 
 ---
 
