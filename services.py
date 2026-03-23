@@ -2,18 +2,6 @@ from utilidades import  validar_nome, validar_idade, validar_email
 from database import salvar_dados, carregar_dados
 
 
-# função menu
-def menu():
-    print("""
-                Sistema de Usuários
-
-                1 - Criar usuário
-                2 - Listar usuários
-                3 - Buscar usuário
-                4 - Remover usuário
-                5 - Sair
-        \n
-        """)
 
 
 # função de função        
