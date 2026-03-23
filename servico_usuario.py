@@ -1,4 +1,4 @@
-from utilidades import obter_dado_usuario, validar_nome, validar_idade, validar_email
+from utilidades import  validar_nome, validar_idade, validar_email
 from database import salvar_dados, carregar_dados
 
 
@@ -39,7 +39,7 @@ def perguntar_continuar():
 
 
 # função de validar usuários 
-def validar_usuario(nome, idade, email, lista_usuarios):
+def validar_usuario(nome, idade, email, usuarios):
     valido, erro = validar_nome(nome)
     # se não for True
     if not valido:
@@ -49,11 +49,11 @@ def validar_usuario(nome, idade, email, lista_usuarios):
     if not valido:
         return False, erro
     
-    valido, erro = validar_email(email, lista_usuarios)
+    valido, erro = validar_email(email, usuarios)
     if not valido:
         return False, erro
     
-    return True, "", (nome, int(idade), email)
+    return True, (nome, int(idade), email)
 
 
 
@@ -64,6 +64,9 @@ def gerar_id(lista_usuarios):
     # isso soma faz a soma com o maior id da lista
     return max(u["id"] for u in lista_usuarios) + 1
 
+
+    
+
 # função de gerar id
 def montar_usuario(id, nome, idade, email):
     return {
@@ -73,54 +76,51 @@ def montar_usuario(id, nome, idade, email):
         "email": email
     }
 
-# função de salvar usuários
-def salvar_usuario(usuario, lista_usuarios):
-    lista_usuarios.append(usuario)
-    salvar_dados(lista_usuarios)
 
 
 # função de usuario
-def criar_usuario(lista_usuarios):
-    # entrado de dados
-    nome, idade, email = obter_dado_usuario()
-    
+def criar_usuario(nome, idade, email):
+    usuarios = carregar_dados()
     # validando os dados 
-    valido, resposta, dados = validar_usuario(nome, idade, email, lista_usuarios)
+    valido, resposta_ou_dados = validar_usuario(nome, idade, email, usuarios)
     if not valido:
-        return False, resposta
-    
-    nome, idade, email = dados
+        return False, resposta_ou_dados
+    nome, idade, email = resposta_ou_dados
     # gerando_id 
-    novo_id = gerar_id(lista_usuarios)
+    novo_id = gerar_id(usuarios)
     # montando 
     usuario = montar_usuario(novo_id, nome, idade, email)
-
-    #salvando
-    salvar_usuario(usuario, lista_usuarios)
+    # salvando dados
+    usuarios.append(usuario)
+    #salvando em JSON
+    salvar_dados(usuarios)
     return True, "Usuário cadastrado com sucesso!\n"
 
-    
 
-    
+
 # função de listar os usuários
-def listar_usuarios(lista_usuarios):
-    return lista_usuarios
+def listar_usuarios():
+    return carregar_dados()
 
 
 # função de buscar usuário pelo ID
-def buscar_usuario(lista_usuarios, numero_id):
-    for usuario in lista_usuarios:
+def buscar_usuario(numero_id):
+    usuarios = carregar_dados()
+    for usuario in usuarios:
         if usuario["id"] == numero_id:
             return True, usuario
     return False, "Usuário não encontrado.\n"
 
 
+    
+
 # função de remover usuário
-def remover_usuario(lista_usuarios, id_remover):
-    for usuario in lista_usuarios:
+def remover_usuario(id_remover):
+    usuarios = carregar_dados()
+    for usuario in usuarios:
         if usuario["id"] == id_remover:
-            lista_usuarios.remove(usuario)
-            salvar_dados(lista_usuarios)
+            usuarios.remove(usuario)
+            salvar_dados(usuarios)
             return True, "Usuário removido com sucesso!\n"
     return False, "Usuário não encontrado.\n"
 

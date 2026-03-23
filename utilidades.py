@@ -2,15 +2,6 @@
 
 
 
-
-# função de entrada de dados
-def obter_dado_usuario():
-    nome = input("Nome: ").strip()
-    idade = input("Idade: ")
-    email = input("Email: ").strip()
-    return nome, idade, email
-
-
 # função de que validar usuario
 def validar_nome(nome):
     if nome == "":
@@ -31,14 +22,14 @@ def validar_idade(idade):
 
 
 # validando email
-def validar_email(email, lista_usuarios):
+def validar_email(email, usuarios):
     if email == "":
         return False, "Email vazio\n"
     
     if '@' not in email:
         return False, "Email inválido\n"
     
-    if any(u["email"] == email for u in lista_usuarios):
+    if any(u["email"] == email for u in usuarios):
         return False, "Email já existe\n"
     
     return True, ""

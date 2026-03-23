@@ -1,7 +1,7 @@
 import json
 
 
-
+# função que carrega dados do JSON para python
 def carregar_dados():
     try:
         # abre o arq, tranforma json -> python
@@ -12,7 +12,7 @@ def carregar_dados():
     except FileNotFoundError:
         return []
     
-
+# função que salva tudo para JSON
 def salvar_dados(lista_usuarios):
     # abre o arq, ler e sobrescreve
     with open("usuarios.json", "w") as f:
