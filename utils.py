@@ -22,15 +22,11 @@ def validar_idade(idade):
 
 
 # validando email
-def validar_email(email, usuarios):
+def validar_email(email):
     if email == "":
         return False, "Email vazio\n"
     
     if '@' not in email:
         return False, "Email inválido\n"
-    
-    if any(u["email"] == email for u in usuarios):
-        return False, "Email já existe\n"
-    
     return True, ""
  

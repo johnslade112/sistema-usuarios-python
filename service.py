@@ -1,19 +1,6 @@
-from utilidades import  validar_nome, validar_idade, validar_email
-from database import salvar_dados, carregar_dados
+from utils import  validar_nome, validar_idade, validar_email
+from database import inserir_usuarios, listar_usuarios, buscar_usuario, remover_usuario
 
-
-# função menu
-def menu():
-    print("""
-                Sistema de Usuários
-
-                1 - Criar usuário
-                2 - Listar usuários
-                3 - Buscar usuário
-                4 - Remover usuário
-                5 - Sair
-        \n
-        """)
 
 
 # função de função        
@@ -39,7 +26,7 @@ def perguntar_continuar():
 
 
 # função de validar usuários 
-def validar_usuario(nome, idade, email, usuarios):
+def validar_usuario(nome, idade, email):
     valido, erro = validar_nome(nome)
     # se não for True
     if not valido:
@@ -49,7 +36,7 @@ def validar_usuario(nome, idade, email, usuarios):
     if not valido:
         return False, erro
     
-    valido, erro = validar_email(email, usuarios)
+    valido, erro = validar_email(email)
     if not valido:
         return False, erro
     
@@ -80,49 +67,42 @@ def montar_usuario(id, nome, idade, email):
 
 # função de usuario
 def criar_usuario(nome, idade, email):
-    usuarios = carregar_dados()
     # validando os dados 
-    valido, resposta_ou_dados = validar_usuario(nome, idade, email, usuarios)
+    valido, resposta_ou_dados = validar_usuario(nome, idade, email)
     if not valido:
         return False, resposta_ou_dados
     nome, idade, email = resposta_ou_dados
-    # gerando_id 
-    novo_id = gerar_id(usuarios)
-    # montando 
-    usuario = montar_usuario(novo_id, nome, idade, email)
-    # salvando dados
-    usuarios.append(usuario)
-    #salvando em JSON
-    salvar_dados(usuarios)
+    try:
+        inserir_usuarios(nome, idade, email)
+    except:
+        return True, "Email já foi cadastrado\n"
+    
     return True, "Usuário cadastrado com sucesso!\n"
 
 
 
 # função de listar os usuários
-def listar_usuarios():
-    return carregar_dados()
+def listar_usuarios_service():
+    return listar_usuarios()
 
 
 # função de buscar usuário pelo ID
-def buscar_usuario(numero_id):
-    usuarios = carregar_dados()
-    for usuario in usuarios:
-        if usuario["id"] == numero_id:
-            return True, usuario
-    return False, "Usuário não encontrado.\n"
+def buscar_usuario_service(numero_id):
+    usuario = buscar_usuario(numero_id)
+    if usuario is None:
+        return False, "Usuário não existe\n"
+    return True, usuario
 
 
     
 
 # função de remover usuário
-def remover_usuario(id_remover):
-    usuarios = carregar_dados()
-    for usuario in usuarios:
-        if usuario["id"] == id_remover:
-            usuarios.remove(usuario)
-            salvar_dados(usuarios)
-            return True, "Usuário removido com sucesso!\n"
-    return False, "Usuário não encontrado.\n"
+def remover_usuario_service(id_remover):
+    deletado = remover_usuario(id_remover)
+    if deletado == 0:
+        return True, "Usuário não encontrado\n"
+    return False, "Usuário removido com sucesso!\n    "
+
 
 
 
