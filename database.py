@@ -38,3 +38,42 @@ def inserir_usuario(nome, idade, email):
 
     conn.commit()
     conn.close()
+
+
+def listar_usuario():
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT * FROM usuarios
+    """)
+    usuarios = cursor.fetchall()
+
+    conn.close()
+    return usuarios
+
+
+def buscar_usuario(id_busca):
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT * FROM usuarios WHERE id = ?
+    """, (id_busca,))
+    usuario = cursor.fetchone()
+
+    conn.close()
+    return usuario
+    
+
+def remover_usuario(id_remover):
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute('DELETE FROM usuarios WHERE id = ?', (id_remover,))
+    usuario_removido = cursor.rowcount
+    conn.commit()
+    conn.close
+    return usuario_removido
+
+

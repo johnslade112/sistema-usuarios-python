@@ -1,5 +1,5 @@
 from database import criar_banco
-from service import criar_usuario
+from service import criar_usuario, listar_usuario_service, buscar_usuario_service, remover_usuario_servico
 
 
 
@@ -66,6 +66,40 @@ def main():
                     print(resposta_ou_dados)
                 if continuar_S_N() == "N":
                     break
+
+
+        if opcao == 2:
+            usuarios =  listar_usuario_service()
+            for u in usuarios:
+                print(f"ID: {u[0]} | Nome: {u[1]} | Idade: {u[2]} | Email: {u[3]}")
+                print("")
+
+
+        if opcao == 3:
+            try:
+                num_id = int(input("Numero do ID: "))
+                valido, resposta_ou_dados= buscar_usuario_service(num_id)
+                if not valido:
+                    print(resposta_ou_dados)
+                else:
+                    print("")
+                    print(print(f"ID: {resposta_ou_dados[0]} | Nome: {resposta_ou_dados[1]} | Idade: {resposta_ou_dados[2]} | Email: {resposta_ou_dados[3]}\n"))
+            except ValueError:
+                print("ID deve ser numero")
+                continue
+
+
+        if opcao == 4:
+            try:
+                num_id = int(input("Digite o ID para remover usuário: "))
+                valido, resposta_ou_dados = remover_usuario_servico(num_id)
+                if not valido:
+                    print(resposta_ou_dados)
+                else:
+                    print(resposta_ou_dados)
+            except ValueError:
+                print("ID inválido")
+                continue
         if opcao == 5:
             break
 
