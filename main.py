@@ -1,6 +1,6 @@
 from database import criar_banco
 from service import criar_usuario, listar_usuario_service, buscar_usuario_service, remover_usuario_servico
-
+from time import sleep
 
 
 
@@ -100,7 +100,10 @@ def main():
             except ValueError:
                 print("ID inválido")
                 continue
-        if opcao == 5:
+        else:
+            print("Saindo...")
+            sleep(3)
+            print("FIM.")
             break
 
 
